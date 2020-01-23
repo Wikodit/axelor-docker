@@ -1,9 +1,6 @@
 FROM adoptopenjdk/openjdk8 as builder
 
 RUN set -ex \
-	&& echo "nameserver 8.8.8.8" > /etc/resolv.conf \
-	&& cat /etc/resolv.conf
-RUN set -ex \
 	&& DEBIAN_FRONTEND=noninteractive apt-get update \
 	&& DEBIAN_FRONTEND=noninteractive apt-get upgrade -y \
 	&& DEBIAN_FRONTEND=noninteractive apt-get install -y \
@@ -138,14 +135,14 @@ ENV LD_LIBRARY_PATH ${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}$CATALINA_HOME/native-j
 
 # nginx
 ENV NGINX_HOST localhost
-ENV NGINX_PORT 80
+ENV NGINX_PORT 443
 
 COPY nginx.conf /etc/nginx/conf.d.templates/
 COPY nginx-ssl.conf /etc/nginx/conf.d.templates/
 
 VOLUME ["/var/lib/tomcat", "/var/log/tomcat"]
 
-EXPOSE 80 8080
+EXPOSE 80 443 8080
 
 COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh && mkdir /docker-entrypoint-initdb.d
