@@ -46,7 +46,6 @@ prepare_app() {
 			&& cp application.properties app.properties \
 			&& echo >> app.properties \
 			&& echo "application.mode = prod" >> app.properties \
-			# jdbc:postgresql://localhost:5432/$POSTGRES_DB
 			&& echo "db.default.url = jdbc:postgresql://$POSTGRES_HOST:$POSTGRES_PORT/$POSTGRES_DB" >> app.properties \
 			&& echo "db.default.user = $POSTGRES_USER" >> app.properties \
 			&& echo "db.default.password = $POSTGRES_PASSWORD" >> app.properties;
