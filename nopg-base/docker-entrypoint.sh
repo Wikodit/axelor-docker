@@ -24,6 +24,9 @@ prepare_app() {
 	mkdir -p /var/log/tomcat
 	mkdir -p $CATALINA_BASE/{conf,temp,webapps}
 
+	# ensure custom upload dir exists
+	mkdir -p $AXELOR_UPLOAD_DIR
+
 	# prepare tomcat base
 	if [ ! -f $CATALINA_BASE/conf/server.xml ]; then
 		mkdir -p $CATALINA_BASE/{conf,temp,webapps}
@@ -48,13 +51,15 @@ prepare_app() {
 			&& echo "application.mode = prod" >> app.properties \
 			&& echo "db.default.url = jdbc:postgresql://$POSTGRES_HOST:$POSTGRES_PORT/$POSTGRES_DB" >> app.properties \
 			&& echo "db.default.user = $POSTGRES_USER" >> app.properties \
-			&& echo "db.default.password = $POSTGRES_PASSWORD" >> app.properties;
+			&& echo "db.default.password = $POSTGRES_PASSWORD" >> app.properties \
+			&& echo "file.upload.dir = $AXELOR_UPLOAD_DIR" >> app.properties;
 		exit 0;
 	)
 
 	# ensure proper permissions
 	( chown -hfR $TOMCAT_USER:adm /var/log/tomcat || exit 0 )
 	( chown -hfR $TOMCAT_USER:$TOMCAT_GROUP $CATALINA_BASE || exit 0 )
+	( chown -hfR $TOMCAT_USER:$TOMCAT_GROUP $AXELOR_UPLOAD_DIR || exit 0 )
 
 	# copy static files in a separate directory for nginx
 	(
